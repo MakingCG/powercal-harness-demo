@@ -1,0 +1,282 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+/* ── Class-based dark mode (controlled by useTheme) ── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Theme tokens (Tailwind v4 CSS-first config) ── */
+@theme {
+  /* Orange palette */
+  --color-theme-50: hsl(33, 100%, 96%);
+  --color-theme-100: hsl(35, 100%, 92%);
+  --color-theme-200: hsl(33, 97%, 83%);
+  --color-theme-300: hsl(31, 100%, 71%);
+  --color-theme-400: hsl(27, 100%, 58%);
+  --color-theme-500: hsl(25, 100%, 50%);
+  --color-theme-600: hsl(18, 100%, 48%);
+  --color-theme-700: hsl(16, 100%, 40%);
+  --color-theme-800: hsl(17, 100%, 31%);
+  --color-theme-900: hsl(16, 83%, 27%);
+  --color-theme-950: hsl(13, 84%, 15%);
+
+  /* Dark mode surface */
+  --color-dark-bg: #01080e;
+  --color-dark-card: hsl(207, 88%, 5%);
+  --color-dark-border: hsl(207, 40%, 12%);
+
+  /* Font */
+  --font-sans: 'Lexend', system-ui, sans-serif;
+
+  /* PowerCal adds no colours: macros (P · C · F) use the theme orange like
+     every other progress, told apart by their letter and fixed order. */
+}
+
+/* ── Base styles ── */
+@layer base {
+  html {
+    background-color: white;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overscroll-behavior: none;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: white;
+    color: var(--color-gray-900);
+    overscroll-behavior: none;
+    overflow: hidden;
+  }
+
+  html.dark,
+  html.dark body {
+    background-color: var(--color-dark-bg);
+    color: var(--color-gray-100);
+  }
+
+  /* Override WebKit autofill yellow background + ensure text uses theme color */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: var(--color-gray-900) !important;
+    caret-color: var(--color-gray-900);
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  html.dark input:-webkit-autofill,
+  html.dark input:-webkit-autofill:hover,
+  html.dark input:-webkit-autofill:focus,
+  html.dark textarea:-webkit-autofill,
+  html.dark select:-webkit-autofill {
+    -webkit-text-fill-color: var(--color-gray-100) !important;
+    caret-color: var(--color-gray-100);
+  }
+}
+
+/* ── Safe area & layout utilities ── */
+@utility pt-safe {
+  padding-top: var(--safe-area-top);
+}
+
+@utility pb-safe {
+  padding-bottom: max(var(--safe-area-bottom), 1.5rem);
+}
+
+/* Sticky footer of a Drawer (the CTA row): sticks to the very bottom edge of the
+   sheet, cancelling the Drawer's own pb-safe, so rows never scroll visibly below it. */
+@utility sheet-footer {
+  position: sticky;
+  bottom: calc(-1 * max(var(--safe-area-bottom), 1.5rem));
+  margin-bottom: calc(-1 * max(var(--safe-area-bottom), 1.5rem));
+  padding-bottom: max(var(--safe-area-bottom), 1.5rem);
+}
+
+@utility pt-safe-page {
+  padding-top: calc(var(--safe-area-top) + 1.5rem);
+}
+
+@utility h-header-offset {
+  height: var(--header-offset);
+}
+
+@utility top-header {
+  top: var(--header-offset);
+}
+
+@utility pb-safe-bar {
+  padding-bottom: clamp(1.25rem, var(--safe-area-bottom), 0.75rem);
+}
+
+/* Page bottom padding: clears the floating nav (AppShell measures --nav-clearance) + breathing room. */
+@utility pb-nav {
+  padding-bottom: calc(max(var(--nav-clearance, 6rem), var(--safe-area-bottom)) + 1.5rem);
+}
+
+@utility pb-safe-nav {
+  padding-bottom: calc(1.25rem + clamp(0.25rem, var(--safe-area-bottom), 0.25rem));
+}
+
+@utility scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility px-page {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* ── List entrance animations (CSS-driven to avoid StrictMode double-fire) ── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-fade-up {
+  animation: fade-up 0.2s ease-out both;
+}
+
+/* ── Range slider styling ── */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    to right,
+    var(--color-theme-500) 0%,
+    var(--color-theme-500) var(--range-progress, 50%),
+    hsl(0 0% 90%) var(--range-progress, 50%),
+    hsl(0 0% 90%) 100%
+  );
+  outline: none;
+}
+
+html.dark input[type='range'] {
+  background: linear-gradient(
+    to right,
+    var(--color-theme-500) 0%,
+    var(--color-theme-500) var(--range-progress, 50%),
+    hsl(207 40% 18%) var(--range-progress, 50%),
+    hsl(207 40% 18%) 100%
+  );
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-theme-500);
+  border: 3px solid white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+html.dark input[type='range']::-webkit-slider-thumb {
+  border-color: var(--color-dark-card);
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-theme-500);
+  border: 3px solid white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+html.dark input[type='range']::-moz-range-thumb {
+  border-color: var(--color-dark-card);
+}
+
+input[type='range']::-moz-range-track {
+  height: 6px;
+  border-radius: 9999px;
+  background: hsl(0 0% 90%);
+}
+
+html.dark input[type='range']::-moz-range-track {
+  background: hsl(207 40% 18%);
+}
+
+input[type='range']::-moz-range-progress {
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--color-theme-500);
+}
+
+/* ── iOS viewport stability ── */
+:root {
+  --app-height: 100vh;
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --header-height: 68px; /* py-4 (32px) + h-9 (36px) */
+  --header-offset: calc(var(--header-height) + var(--safe-area-top));
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --app-height: 100dvh;
+  }
+}
+
+html, body, #root {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+/* The design-system showcase is a desktop reference page with natural
+   document scroll (the app itself scrolls inside AppShell only). */
+body:has(.ds-showcase) {
+  overflow: visible;
+  overflow-x: hidden;
+}
+
+/* ── iOS standalone PWA: prevent rubber-band bounce ── */
+@media (display-mode: standalone) {
+  html, body {
+    touch-action: pan-x pan-y;
+  }
+}
+
+/* ── iOS input focus: prevent scroll jump ── */
+@supports (-webkit-touch-callout: none) {
+  input, textarea, select {
+    font-size: 16px;
+  }
+}
+
+/* ── Macro overflow: striped segment past the goal (MacroBar) ── */
+@utility bg-stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0 3px,
+    rgb(255 255 255 / 0.45) 3px 6px
+  );
+}
+
+/* ── Reduced motion: keep opacity changes, drop movement ── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
+  }
+}

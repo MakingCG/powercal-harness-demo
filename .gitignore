@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+dist/
+dev-dist/
+.vercel/
+.idea/
+.claude/settings.local.json
+.qa/
