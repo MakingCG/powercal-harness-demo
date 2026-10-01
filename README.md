@@ -10,6 +10,7 @@ It is the companion repo to the article **Recompile, don't refactor** — how to
 - Slovak: https://peterpapp.sk/blog/2026-09-22-prekompiluj-nerefaktoruj
 
 https://github.com/user-attachments/assets/3ff6019e-fe0a-49e3-869b-b269f0722085
+
 *PowerCal after a single autonomous build from this harness, filled with demo data — about 3.5 hours, audits and fixes included.*
 
 ## What's inside
